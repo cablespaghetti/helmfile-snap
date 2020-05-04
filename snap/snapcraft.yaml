@@ -1,0 +1,41 @@
+base: core18
+name: helmfile
+version: '0.114.0'
+summary: Deploy Kubernetes Helm Charts.
+description: |
+  Helmfile is a declarative spec for deploying helm charts. It lets you...
+  
+    * Keep a directory of chart value files and maintain changes in version control.
+    * Apply CI/CD to configuration changes.
+    * Periodically sync to avoid skew in environments.
+
+  To avoid upgrades for each iteration of helm, the helmfile executable delegates to helm - as a result, helm must be installed.
+grade: stable
+confinement: classic
+
+apps:
+  helmfile:
+    command: helmfile
+
+architectures:
+  - build-on: amd64
+  - build-on: i386
+
+parts:
+  helmfile:
+    plugin: dump
+    source: .
+    build-packages:
+    - curl
+    override-pull: |
+      cd "$SNAPCRAFT_PART_SOURCE" 
+      if [ "$SNAPCRAFT_ARCH_TRIPLET" = "x86_64-linux-gnu" ]; then
+        curl -sSL -o helmfile https://github.com/roboll/helmfile/releases/download/v${SNAPCRAFT_PROJECT_VERSION}/helmfile_linux_amd64
+      elif [ "$SNAPCRAFT_ARCH_TRIPLET" = "i386-linux-gnu" ]; then
+        curl -sSL -o helmfile https://github.com/roboll/helmfile/releases/download/v${SNAPCRAFT_PROJECT_VERSION}/helmfile_linux_386
+      else
+        exit 1
+      fi
+      chmod +x helmfile
+    stage:
+      - helmfile

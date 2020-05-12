@@ -1,6 +1,6 @@
 base: core18
 name: helmfile
-version: '0.115.0'
+version: '0.116.0'
 summary: Deploy Kubernetes Helm Charts.
 description: |
   Helmfile is a declarative spec for deploying helm charts. It lets you...
